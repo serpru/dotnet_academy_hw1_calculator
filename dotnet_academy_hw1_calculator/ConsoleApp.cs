@@ -43,27 +43,28 @@ namespace dotnet_academy_hw1_calculator
             var optionString = Console.ReadLine();
             int parsedOption;
             bool parseSuccess = int.TryParse(optionString, out parsedOption);
-            //bool parseSuccess = int.TryParse(optionString, NumberStyles.Float, CultureInfo.GetCultureInfo("en-US"), out  parsedOption);
             if (!parseSuccess) { return -1; }
             if (parsedOption < 0) { return -1; }
+            var maxEnumVal = Enum.GetValues(typeof(MenuOption)).Cast<MenuOption>().Max();
+            if (parsedOption > (int)maxEnumVal) {  return -1; }
             return parsedOption;
         }
         public void TakeOneParameterFromUser()
         {
             Console.WriteLine("Enter first parameter.");
             FirstNumber = TakeInput();
-            while (FirstNumber == double.NaN)
+            while (double.IsNaN(FirstNumber))
             {
                 Console.WriteLine("Invalid input parameter. Try again.");
                 FirstNumber = TakeInput();
             }
-            Console.WriteLine("Enter second parameter");
         }
         public void TakeParametersFromUser()
         {
             TakeOneParameterFromUser();
+            Console.WriteLine("Enter second parameter");
             SecondNumber = TakeInput();
-            while (SecondNumber == double.NaN)
+            while (double.IsNaN(SecondNumber))
             {
                 Console.WriteLine("Invalid input parameter. Try again.");
                 SecondNumber = TakeInput();
@@ -71,45 +72,59 @@ namespace dotnet_academy_hw1_calculator
         }
         public void Run()
         {
-            Console.WriteLine("Choose option:\n0 - Quit\n1 - Sum\n2 - Diff\n3 - Multiply" +
+            int option = -1;
+            while (option != (int)MenuOption.QUIT)
+            {
+                Console.WriteLine("Choose option:\n0 - Quit\n1 - Sum\n2 - Diff\n3 - Multiply" +
                 "\n4 - Divide\n5 - Exponential\n6 - Factorial");
-            var option = TakeOption();
-
-            while (option == -1)
-            {
-                Console.WriteLine("Invalid option.");
                 option = TakeOption();
+
+                while (option == -1)
+                {
+                    Console.WriteLine("Invalid option. Choose option:\n0 - Quit\n1 - Sum\n2 - Diff\n3 - Multiply"
+                        + "\n4 - Divide\n5 - Exponential\n6 - Factorial");
+                    option = TakeOption();
+                }
+                switch ((MenuOption)option)
+                {
+                    case MenuOption.QUIT:
+                        Console.WriteLine("Goodbye.");
+                        break;
+                    case MenuOption.SUM:
+                        TakeParametersFromUser();
+                        Console.WriteLine($"{FirstNumber} + {SecondNumber} = {Calculator.Sum(FirstNumber, SecondNumber)}");
+                        break;
+                    case MenuOption.DIFF:
+                        TakeParametersFromUser();
+                        Console.WriteLine(Calculator.Diff(FirstNumber, SecondNumber));
+                        break;
+                    case MenuOption.MULTIPLY:
+                        TakeParametersFromUser();
+                        Console.WriteLine($"{FirstNumber} * {SecondNumber} = {Calculator.Multiply(FirstNumber, SecondNumber)}");
+                        break;
+                    case MenuOption.DIVIDE:
+                        TakeParametersFromUser();
+                        var result = Calculator.Divide(FirstNumber, SecondNumber);
+                        if (double.IsNaN(result))
+                        {
+                            Console.WriteLine("Cannot divide by zero, sorry!");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{FirstNumber} / {SecondNumber} = {result}");
+                        }
+                        break;
+                    case MenuOption.EXP:
+                        TakeParametersFromUser();
+                        Console.WriteLine($"{FirstNumber} ^ {SecondNumber} = {Calculator.Exp(FirstNumber, SecondNumber)}");
+                        break;
+                    case MenuOption.FAC:
+                        TakeOneParameterFromUser();
+                        Console.WriteLine($"{(int)FirstNumber}! = {Calculator.Fact((int)FirstNumber)}");
+                        break;
+                }
             }
-            switch ((MenuOption)option)
-            {
-                case MenuOption.QUIT:
-                    Console.WriteLine("Goodbye.");
-                    break;
-                case MenuOption.SUM:
-                    TakeParametersFromUser();
-                    Console.WriteLine($"{FirstNumber} + {SecondNumber} = {Calculator.Sum(FirstNumber, SecondNumber)}");
-                    break;
-                case MenuOption.DIFF:
-                    TakeParametersFromUser();
-                    Console.WriteLine(Calculator.Diff(FirstNumber, SecondNumber));
-                    break;
-                case MenuOption.MULTIPLY:
-                    TakeParametersFromUser();
-                    Calculator.Multiply(FirstNumber, SecondNumber);
-                    break;
-                case MenuOption.DIVIDE:
-                    TakeParametersFromUser();
-                    Calculator.Divide(FirstNumber, SecondNumber);
-                    break;
-                case MenuOption.EXP:
-                    TakeParametersFromUser();
-                    Calculator.Exp(FirstNumber, SecondNumber);
-                    break;
-                case MenuOption.FAC:
-                    TakeOneParameterFromUser();
-                    Calculator.Fact((int)FirstNumber);
-                    break;
-            }
+
         }
 
     }

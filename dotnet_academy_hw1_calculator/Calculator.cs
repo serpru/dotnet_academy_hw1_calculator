@@ -25,7 +25,6 @@ namespace dotnet_academy_hw1_calculator
             if (y == 0)
             {
                 return double.NaN;
-                //throw new DivideByZeroException("Attempted dividing by zero");
             }
             return x / y;
         }

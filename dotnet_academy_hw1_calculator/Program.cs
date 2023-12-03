@@ -12,26 +12,6 @@ namespace dotnet_academy_hw1_calculator
         {
             var consoleApp = new ConsoleApp();
             consoleApp.Run();
-
-
-
-
-            double x = 5.5;
-            //double y = 2;
-
-            //var sum = Calculator.Sum(x, y);
-            //var diff = Calculator.Diff(x, y);
-            //var mult = Calculator.Multiply(x, y);
-            //var div = Calculator.Divide(x, y);
-            //if (div == double.NaN) { Console.WriteLine("lol"); }
-
-
-
-            //var exp = Calculator.Exp(x, y);
-            //var fact = Calculator.Fact((int)x);
-
         }
-
-        
     }
 }
